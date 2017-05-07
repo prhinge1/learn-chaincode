@@ -19,6 +19,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -77,21 +78,66 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 //Write is custome function inserted for sample
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error){
 	
-	var name, value string
-    var err error
-    fmt.Println("running write()")
-
-    if len(args) != 2 {
+	//var srcParty,,targBalstr,srcBalstr,strsrcBal  string
+	var srcParty,trgParty,strsrcBal,strtargBal,targBalstr  string
+   var transferAmt,srcBal,targBal int
+   
+   
+   var bytesinfo []byte
+   var bytestarbal []byte
+      
+    //var err,err3,err4,err5,err6,err7,err8,err1 error 
+	var err3,err4,err1,err2,err5 error
+    
+    if len(args) != 3 {
         return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the variable and value to set")
     }
+	//fmt.Println(" Argument--------> "+ len(args))
+    srcParty = args[0]
+	trgParty = args[1]                           //rename for fun
+    transferAmt, err3 = strconv.Atoi(args[2])
+	if err3 !=nil{
+		fmt.Println(err3)
+	}
+	bytesinfo, err1 =stub.GetState(srcParty)
+	if err1 !=nil{
+		fmt.Println(err1)
+	}
+	strsrcBal =string(bytesinfo)
+	srcBal, err4 = strconv.Atoi(strsrcBal)
+	if err4 !=nil{
+		fmt.Println(err4)
+	}
+	
+	bytestarbal, err2 =stub.GetState(trgParty)
+	if err2 !=nil{
+		fmt.Println(err2)
+	}
+	strtargBal=string(bytestarbal)
+	targBal, err5 = strconv.Atoi(strtargBal)
+	if err5 !=nil{
+		fmt.Println(err5)
+	}
+	
+	if(transferAmt<srcBal){
+		targBal=targBal + transferAmt
+		srcBal=srcBal-transferAmt
+		targBalstr=string(targBal)
+		srcBalstr:=string(srcBal)
 
-    name = args[0]                            //rename for fun
-    value = args[1]
-    err = stub.PutState(name, []byte(value))  //write the variable into the chaincode state
-    if err != nil {
-        return nil, err
-    }
-    return nil, nil
+		err := stub.PutState(trgParty, []byte(targBalstr))  //write the variable into the chaincode state
+		if err != nil {
+			return nil, err
+		}
+
+		err1 := stub.PutState(srcParty, []byte(srcBalstr))  //write the variable into the chaincode state
+		if err1 != nil {
+			return nil, err1
+		}
+	
+	}
+
+  return nil, nil
 
 
 }
