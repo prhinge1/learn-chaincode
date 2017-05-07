@@ -88,7 +88,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
       
     //var err,err3,err4,err5,err6,err7,err8,err1 error 
 	var err3,err4,err1,err2,err5 error
-    
+    fmt.Println(" Argument-------->%d", len(args))
     if len(args) != 3 {
         return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the variable and value to set")
     }
