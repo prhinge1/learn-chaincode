@@ -47,14 +47,14 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	return nil,err
 	}
 
-	err	:=stub.PutState("Distributer",[]byte(args[1]))
-	if err !=nil {
-	return nil,err
+	err1 :=stub.PutState("Distributer",[]byte(args[1]))
+	if err1 !=nil {
+	return nil,err1
 	}
 
-	err	:=stub.PutState("Retailer",[]byte(args[2]))
-	if err !=nil {
-	return nil,err
+	err2	:=stub.PutState("Retailer",[]byte(args[2]))
+	if err2 !=nil {
+	return nil,err2
 	}
 	return nil, nil
 }
