@@ -88,7 +88,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
       
     //var err,err3,err4,err5,err6,err7,err8,err1 error 
 	var err3,err4,err1,err2,err5 error
-    fmt.Println(" Argument-------->%d", len(args))
+    fmt.Printf(" Argument-------->%d", len(args))
     if len(args) != 3 {
         return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the variable and value to set")
     }
@@ -99,10 +99,18 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 	if err3 !=nil{
 		fmt.Println(err3)
 	}
+	fmt.Printf("srcParty==>%s",srcParty)
+	fmt.Printf("trgParty==>%s",trgParty)
+	fmt.Printf("transferAmt==>%d",transferAmt)
+
 	bytesinfo, err1 =stub.GetState(srcParty)
 	if err1 !=nil{
 		fmt.Println(err1)
 	}
+	if(bytesinfo==nil){
+		return nil,errors.New("Entity not found")
+	}
+	
 	strsrcBal =string(bytesinfo)
 	srcBal, err4 = strconv.Atoi(strsrcBal)
 	if err4 !=nil{
@@ -125,6 +133,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 		targBalstr=string(targBal)
 		srcBalstr:=string(srcBal)
 
+		fmt.Printf("srcBalstr= %s,targBalstr=%s",srcBalstr,targBalstr)
 		err := stub.PutState(trgParty, []byte(targBalstr))  //write the variable into the chaincode state
 		if err != nil {
 			return nil, err
