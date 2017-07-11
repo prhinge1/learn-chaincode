@@ -32,8 +32,8 @@ type SimpleChaincode struct {
 }
 
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	var A, B, C string    // Entities
-	var Aval, Bval, Cval int // Asset holdings
+	var A, B string    // Entities
+	var Aval, Bval int // Asset holdings
 	var err error
 
 	if len(args) != 4 {
@@ -51,12 +51,8 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	if err != nil {
 		return nil, errors.New("Expecting integer value for asset holding")
 	}
-	C = args[4]
-	Cval, err = strconv.Atoi(args[5])
-	if err != nil {
-		return nil, errors.New("Expecting integer value for asset holding")
-	}
-	fmt.Printf("Aval = %d, Bval = %d, Cval = %d\n", Aval, Bval, Cval)
+	
+	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
 	
 	// Write the state to the ledger
 	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
