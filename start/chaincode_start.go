@@ -32,8 +32,8 @@ type SimpleChaincode struct {
 }
 
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	var A, B string    // Entities
-	var Aval, Bval int // Asset holdings
+	var A, B, C string    // Entities
+	var Aval, Bval, Cval int // Asset holdings
 	var err error
 
 	if len(args) != 4 {
